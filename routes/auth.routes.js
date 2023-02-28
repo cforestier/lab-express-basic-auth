@@ -36,7 +36,7 @@ router.get("/userProfile", isLoggedIn, (req, res) => {
 });
 
 // GET route ==> to display the login form to users
-router.get("/login", (req, res) => res.render("auth/login"));
+router.get("/login", isLoggedOut, (req, res) => res.render("auth/login"));
 
 router.post("/login", (req, res, next) => {
   console.log("SESSION =====> ", req.session);
@@ -72,7 +72,8 @@ router.get("/userProfile", (req, res) => {
   res.render("users/user-profile", { userInSession: req.session.currentUser });
 });
 
-router.post("/logout", (req, res, next) => {
+router.post("/logout", isLoggedIn, (req, res, next) => {
+  // if the user is loggout, redirect to the login page, if he is loggedin, log him out
   req.session.destroy((err) => {
     if (err) next(err);
     res.redirect("/");
